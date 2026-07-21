@@ -16,6 +16,18 @@ La phrase qu'on veut provoquer :
 
 ## Utilisation
 
+### Depuis CMD (recommandé)
+
+```cmd
+shell\cmdschool.cmd random
+shell\cmdschool.cmd discover vaultcmd
+shell\cmdschool.cmd list
+shell\cmdschool.cmd categories
+shell\cmdschool.cmd history
+```
+
+### Depuis PowerShell
+
 ```powershell
 # Découverte aléatoire
 pwsh ./shell/cmdschool.ps1 random
@@ -75,13 +87,52 @@ CommandSchool/
 └── README.md
 ```
 
-## Ajouter une découverte
+## Contribuer
+
+### Signaler un bug
+
+Tu as rencontré un problème ? Ouvre une issue sur le repo. Indique :
+- Ta version Windows
+- La commande qui pose problème
+- Le message d'erreur si tu en as un
+
+### Suggérer une commande
+
+Tu veux une nouvelle découverte ? Ouvre une issue avec :
+- Le nom de la commande Windows
+- Ce que l'utilisateur voit
+- Ce que ça signifie pour lui
+- Exemples concrets d'utilisation
+
+### Ajouter une découverte toi-même
 
 1. Crée un fichier `discoveries/moncommand.yaml`
 2. Remplis : `title`, `category`, `level`, `command`, `explanation`, `real_world_use_cases`
 3. Relance `pwsh ./shell/cmdschool.ps1 list` pour vérifier
 
 Le modèle complet est dans `discoveries/vaultcmd.yaml`.
+
+## Feuille de route
+
+### V1 — Windows (current)
+
+Découvertes de commandes shell Windows (`cmd`, PowerShell, et exécutables natifs).
+
+### Prochaines étapes
+
+| Plateforme | Mode | Statut |
+|---|---|---|
+| Windows | Exécution + Lecture seule | ✅ V1 |
+| macOS | Lecture seule | 🔜 |
+| Linux | Lecture seule | 🔜 |
+| NAS (Synology, QNAP) | Lecture seule | 🔜 |
+| Raspberry Pi | Lecture seule | 🔜 |
+
+### Les deux modes
+
+**Mode Exécution** : la commande est réellement lancée sur le système. L'utilisateur voit le résultat en temps réel. Disponible sur Windows.
+
+**Mode Lecture seule** : la découverte s'affiche avec des exemples et explications, sans exécuter de commande. C'est le mode par défaut sur les plateformes qui ne permettent pas l'exécution directe (iOS, Android, NAS, etc.).
 
 ## Technologies
 
