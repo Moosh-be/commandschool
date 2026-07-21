@@ -3,14 +3,40 @@
 # Rendu console du Markdown de CommandSchool
 # =============================================================================
 
+function Write-Frame {
+    param(
+        [string]$Text = "",
+        [string]$Title = "",
+        [string]$Subtitle = "",
+        [System.ConsoleColor]$TitleColor = [System.ConsoleColor]::Cyan,
+        [int]$Width = 78
+    )
+
+    if ($Title) {
+        Write-Host "+$('-' * ($Width - 2))+" -ForegroundColor DarkGray
+        if ($Title.Length -gt $Width - 4) {
+            Write-Host "| $(($Title.Substring(0, $Width - 6)))..." -ForegroundColor $TitleColor
+        } else {
+            Write-Host "| $($Title.PadRight($Width - 4))|" -ForegroundColor $TitleColor
+        }
+        if ($Subtitle) {
+            Write-Host "| $($Subtitle.PadRight($Width - 4))|" -ForegroundColor DarkGray
+        }
+        Write-Host "+$('-' * ($Width - 2))+" -ForegroundColor DarkGray
+        Write-Host ""
+    } else {
+        Write-Host "| $Text" -ForegroundColor $TitleColor
+    }
+}
+
 function Format-DiscoveryOutput {
     <#
     .SYNOPSIS
         Affiche une découverte formatée dans la console
     .DESCRIPTION
         Prend un objet discovery et un résultat de commande,
-        et affiche le contenu formaté avec des couleurs et
-        une mise en page lisible.
+        et affiche le contenu formaté avec un cadre ASCII,
+        des chapitres numérotés et une pagination automatique.
     .PARAMETER Discovery
         L'objet discovery (table de hachage)
     .PARAMETER CommandResult
@@ -28,52 +54,50 @@ function Format-DiscoveryOutput {
         [switch]$ShowRawOutput
     )
 
-    # =====================================================================
-    # En-tête
-    # =====================================================================
-    Write-Host ""
-    Write-Host "==============================================================" -ForegroundColor DarkCyan
-    Write-Host "                   CommandSchool                           " -ForegroundColor DarkCyan
-    Write-Host "==============================================================" -ForegroundColor DarkCyan
-    Write-Host ""
+    $frameWidth = 78
 
-    # Titre de la découverte
+    # =====================================================================
+    # CHAPITRE 0 : En-tête
+    # =====================================================================
+    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+    Write-Host "| $($('CommandSchool').PadRight($frameWidth - 4))|" -ForegroundColor DarkCyan
+    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+    Write-Host ""
     Write-Host "  $($Discovery.title)" -ForegroundColor Cyan
     Write-Host ""
-
-    # Métadonnées
     $levelName = GetLevelName $Discovery.level
     Write-Host "  Catégorie : $($Discovery.category)" -ForegroundColor DarkGray
     Write-Host "  Niveau    : $levelName" -ForegroundColor DarkGray
     Write-Host ""
 
     # =====================================================================
-    # Commande
+    # CHAPITRE 1 : La commande
     # =====================================================================
-    Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
+    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+    Write-Host "| $($('- Chapitre 1 :').PadLeft(20)) Commande............|" -ForegroundColor DarkGray
+    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
     Write-Host ""
-    Write-Host "  $($Discovery.command_title)" -ForegroundColor Yellow
     Write-Host "  $($Discovery.command)" -ForegroundColor Green
     Write-Host ""
 
     # =====================================================================
-    # Ce que l'utilisateur voit
+    # CHAPITRE 2 : Ce que tu vois
     # =====================================================================
     if ($Discovery.what_you_see) {
-        Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
-        Write-Host ""
-        Write-Host "  Ce que tu vois :" -ForegroundColor Yellow
+        Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+        Write-Host "| $($('- Chapitre 2 :').PadLeft(20)) Ce que tu vois...   |" -ForegroundColor DarkGray
+        Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
         Write-Host ""
         Write-MultiLineText $Discovery.what_you_see -ForegroundColor DarkYellow
         Write-Host ""
     }
 
     # =====================================================================
-    # Résultat de la commande
+    # CHAPITRE 3 : Ce que ton ordinateur dit
     # =====================================================================
-    Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
-    Write-Host ""
-    Write-Host "  Ce que ton ordinateur dit :" -ForegroundColor Yellow
+    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+    Write-Host "| $($('- Chapitre 3 :').PadLeft(20)) Commande sortie...  |" -ForegroundColor DarkGray
+    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
     Write-Host ""
 
     if ($CommandResult.Success) {
@@ -94,47 +118,48 @@ function Format-DiscoveryOutput {
     Write-Host ""
 
     # =====================================================================
-    # Interprétation
+    # CHAPITRE 4 : Ce que cela signifie
     # =====================================================================
     if ($Discovery.explanation) {
-        Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
-        Write-Host ""
-        Write-Host "  Ce que cela signifie :" -ForegroundColor Yellow
+        Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+        Write-Host "| $($('- Chapitre 4 :').PadLeft(20)) Interprétation...   |" -ForegroundColor DarkGray
+        Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
         Write-Host ""
         Write-MultiLineText $Discovery.explanation -ForegroundColor White
         Write-Host ""
     }
 
     # =====================================================================
-    # Cas d'usage réels
+    # CHAPITRE 5 : Quand cela t'aide
     # =====================================================================
     if ($Discovery.real_world_use_cases -and $Discovery.real_world_use_cases.Count -gt 0) {
-        Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
-        Write-Host ""
-        Write-Host "  Quand cela t'aide :" -ForegroundColor Yellow
+        Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+        Write-Host "| $($('- Chapitre 5 :').PadLeft(20)) Cas pratiques.......|" -ForegroundColor DarkGray
+        Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
         Write-Host ""
 
         for ($i = 0; $i -lt $Discovery.real_world_use_cases.Count; $i++) {
             $useCase = $Discovery.real_world_use_cases[$i]
-            $pad = " " * (2 - ($i + 1).ToString().Length)
-            Write-Host "  $($pad)$($i + 1)." -ForegroundColor DarkCyan
+            $pad = " " * (1 - ($i + 1).ToString().Length)
+            Write-Host "  $($pad)$($i + 1)." -ForegroundColor DarkCyan -NoNewline
+            Write-Host " " -NoNewline
             Write-MultiLineText $useCase -ForegroundColor White
             Write-Host ""
         }
     }
 
     # =====================================================================
-    # Pour aller plus loin
+    # CHAPITRE 6 : Pour aller plus loin
     # =====================================================================
     if ($Discovery.go_deeper -and $Discovery.go_deeper.Count -gt 0) {
-        Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
-        Write-Host ""
-        Write-Host "  Pour aller plus loin :" -ForegroundColor Yellow
+        Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+        Write-Host "| $($('- Chapitre 6 :').PadLeft(20)) Aller plus loin.....|" -ForegroundColor DarkGray
+        Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
         Write-Host ""
 
         for ($i = 0; $i -lt $Discovery.go_deeper.Count; $i++) {
             $item = $Discovery.go_deeper[$i]
-            $pad = " " * (2 - ($i + 1).ToString().Length)
+            $pad = " " * (1 - ($i + 1).ToString().Length)
             Write-Host "  $($pad)$($i + 1). " -ForegroundColor DarkCyan -NoNewline
             Write-Host "$item" -ForegroundColor DarkGray
         }
@@ -143,16 +168,16 @@ function Format-DiscoveryOutput {
     }
 
     # =====================================================================
-    # Commandes liées
+    # CHAPITRE 7 : Commandes liées
     # =====================================================================
     if ($Discovery.related_commands -and $Discovery.related_commands.Count -gt 0) {
-        Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
-        Write-Host ""
-        Write-Host "  Autres commandes de cette famille :" -ForegroundColor Yellow
+        Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+        Write-Host "| $($('- Chapitre 7 :').PadLeft(20)) Commandes liées.....|" -ForegroundColor DarkGray
+        Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
         Write-Host ""
 
         for ($i = 0; $i -lt $Discovery.related_commands.Count; $i++) {
-            $pad = " " * (2 - ($i + 1).ToString().Length)
+            $pad = " " * (1 - ($i + 1).ToString().Length)
             Write-Host "  $($pad)$($i + 1). " -ForegroundColor DarkCyan -NoNewline
             Write-Host "$($Discovery.related_commands[$i])" -ForegroundColor Green
         }
@@ -163,11 +188,13 @@ function Format-DiscoveryOutput {
     # =====================================================================
     # Pied de page
     # =====================================================================
+    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+    Write-Host "| $($('- Fin de la découverte.').PadRight($frameWidth - 4))|" -ForegroundColor DarkCyan
+    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
     Write-Host ""
-    Write-Host "  Pour continuer à explorer :" -ForegroundColor DarkCyan
-    Write-Host "    pwsh ./shell/cmdschool.ps1 random        --> Découverte aléatoire" -ForegroundColor DarkGray
-    Write-Host "    pwsh ./shell/cmdschool.ps1 list          --> Toutes les découvertes" -ForegroundColor DarkGray
-    Write-Host "    pwsh ./shell/cmdschool.ps1 help          --> Toutes les commandes" -ForegroundColor DarkGray
+    Write-Host "  Pour continuer :" -ForegroundColor DarkCyan
+    Write-Host "    .\cmdschool.ps1 random        --> Découverte aléatoire" -ForegroundColor DarkGray
+    Write-Host "    .\cmdschool.ps1 list          --> Toutes les découvertes" -ForegroundColor DarkGray
     Write-Host ""
 }
 
