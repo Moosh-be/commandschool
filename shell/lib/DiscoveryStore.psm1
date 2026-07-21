@@ -60,6 +60,80 @@ function ParseSimpleValue {
     return $Value
 }
 
+# --- Lit un bloc indenté (key: |) ---
+function Read-BlockContent {
+    param([string[]]$Lines, [int]$StartIndex, [int]$BaseIndent)
+    $blockContent = @()
+    $blockIndent = $null
+    $i = $StartIndex
+    while ($i -lt $Lines.Count) {
+        $bLine = $Lines[$i]
+        $bIndent = $bLine.Length - $bLine.TrimStart().Length
+        $bTrimmed = $bLine.Trim()
+        if ($bIndent -eq 0 -and -not [string]::IsNullOrWhiteSpace($bTrimmed)) { break }
+        if ($blockIndent -ne $null -and $bIndent -lt $blockIndent -and -not [string]::IsNullOrWhiteSpace($bTrimmed)) { break }
+        if ($blockIndent -eq $null -and -not [string]::IsNullOrWhiteSpace($bTrimmed)) { $blockIndent = $bIndent }
+        if ([string]::IsNullOrWhiteSpace($bTrimmed)) { $blockContent += "" }
+        elseif ($blockIndent -ne $null) { $blockContent += $bLine.Substring($blockIndent) }
+        $i++
+    }
+    return @{ Text = ($blockContent -join "`n").TrimEnd(); NextIndex = $i }
+}
+
+# --- Parse un objet dans une séquence ("- key: value" ou "- key: |") ---
+function Parse-YamlObject {
+    param([string[]]$Lines, [int]$StartIndex, [int]$SeqIndent)
+    $sLine = $Lines[$StartIndex]
+    $sIndent = $sLine.Length - $sLine.TrimStart().Length
+    $sTrimmed = $sLine.Trim()
+    # Extraire "key: value" après "- "
+    $contentAfterDash = $sTrimmed.Substring(2).Trim()
+    if ($contentAfterDash -match '^(\w[\w_-]+)\s*:\s*(.*)$') {
+        $firstKey = $Matches[1]
+        $firstVal = $Matches[2].Trim()
+    } else { return @{ Item = @{}; NextIndex = $StartIndex + 1 } }
+
+    $obj = @{}
+    $i = $StartIndex + 1
+
+    # Première propriété
+    if ($firstVal -eq '' -or $firstVal -eq '|') {
+        $block = Read-BlockContent $Lines $i $sIndent
+        $obj[$firstKey] = $block.Text
+        $i = $block.NextIndex
+    } else {
+        $obj[$firstKey] = ParseSimpleValue $firstVal
+        $i++
+    }
+
+    # Propriétés suivantes dans le même objet
+    while ($i -lt $Lines.Count) {
+        $nLine = $Lines[$i]
+        $nTrimmed = $nLine.Trim()
+        $nIndent = $nLine.Length - $nLine.TrimStart().Length
+
+        if ($nIndent -le $sIndent) { break }
+        if ([string]::IsNullOrWhiteSpace($nTrimmed)) { $i++; continue }
+        if ($nIndent -eq $sIndent -and $nTrimmed -match '^\-\s') { break }
+
+        if ($nTrimmed -match '^(\w[\w_-]+)\s*:\s*(.*)$') {
+            $pKey = $Matches[1]
+            $pVal = $Matches[2].Trim()
+
+            if ($pVal -eq '' -or $pVal -eq '|') {
+                $block = Read-BlockContent $Lines ($i + 1) $nIndent
+                $obj[$pKey] = $block.Text
+                $i = $block.NextIndex
+            } else {
+                $obj[$pKey] = ParseSimpleValue $pVal
+                $i++
+            }
+        } else { $i++ }
+    }
+
+    return @{ Item = $obj; NextIndex = $i }
+}
+
 function ConvertFrom-CommandSchoolYaml {
     param([Parameter(Mandatory = $true)][string]$Path)
 
@@ -80,48 +154,22 @@ function ConvertFrom-CommandSchoolYaml {
         $trimmed = $line.Trim()
         $indent = $line.Length - $line.TrimStart().Length
 
-        # Skip indented lines at root level loop (shouldn't happen, but safe)
-        if ($indent -gt 0) { $i++; continue }
-        # Skip blank lines at root level
         if ([string]::IsNullOrWhiteSpace($trimmed)) { $i++; continue }
 
         # ---- Block scalar : key: | ----
         if ($trimmed -match '^(\w[\w_-]+)\s*:\s*\|\s*$') {
             $key = $Matches[1]
-            $blockContent = @()
-            $blockIndent = $null
-            $i++
-            while ($i -lt $lines.Count) {
-                $bLine = $lines[$i]
-                $bTrimmed = $bLine.Trim()
-                $bIndent = $bLine.Length - $bLine.TrimStart().Length
-
-                # End of block: non-empty line at indent 0 = new root key
-                if ($bIndent -eq 0 -and -not [string]::IsNullOrWhiteSpace($bTrimmed)) { break }
-
-                # End of block: non-empty line with less indent than block content
-                if ($blockIndent -ne $null -and $bIndent -lt $blockIndent -and -not [string]::IsNullOrWhiteSpace($bTrimmed)) { break }
-
-                if ($blockIndent -eq $null) {
-                    $blockIndent = $bIndent
-                }
-
-                # Empty lines at any indent (including indent 0 paragraph separators) are kept as blanks
-                if ([string]::IsNullOrWhiteSpace($bTrimmed)) {
-                    $blockContent += ""
-                } else {
-                    $blockContent += $bLine.Substring($blockIndent)
-                }
-                $i++
-            }
-            $result[$key] = ($blockContent -join "`n").TrimEnd()
+            $block = Read-BlockContent $lines ($i + 1) $indent
+            $result[$key] = $block.Text
+            $i = $block.NextIndex
         }
-        # ---- Séquence bloc : key: suivi de lignes "- item" ----
+        # ---- Séquence bloc : key: ----
         elseif ($trimmed -match '^(\w[\w_-]+)\s*:\s*$') {
             $key = $Matches[1]
             $array = @()
             $i++
 
+            # Détecter l'indentation de la séquence
             $seqIndent = 2
             if ($i -lt $lines.Count) {
                 $seqIndent = $lines[$i].Length - $lines[$i].TrimStart().Length
@@ -132,11 +180,38 @@ function ConvertFrom-CommandSchoolYaml {
                 $sTrimmed = $sLine.Trim()
                 $sIndent = $sLine.Length - $sLine.TrimStart().Length
 
-                # End of sequence: non-empty line at indent 0 = new root key
                 if ($sIndent -eq 0 -and -not [string]::IsNullOrWhiteSpace($sTrimmed)) { break }
                 if ($sIndent -lt $seqIndent) { break }
 
-                # Item multi-ligne : "- |"
+                # === DÉTECTION PRIORITAIRE : objet séquence "- key: ..." ===
+                # Le regex vérifie : "- " + un mot + ": " + (rien OU | OU valeur)
+                if ($sTrimmed -match '^\-\s+(\w[\w_-]+):\s*$') {
+                    # "- key: " avec rien après le : → objet multi-ligne
+                    $obj = Parse-YamlObject $lines $i $seqIndent
+                    $array += $obj.Item
+                    $i = $obj.NextIndex
+                    continue
+                }
+                if ($sTrimmed -match '^\-\s+(\w[\w_-]+):\s*\|') {
+                    # "- key: |" → objet avec bloc multi-ligne
+                    $obj = Parse-YamlObject $lines $i $seqIndent
+                    $array += $obj.Item
+                    $i = $obj.NextIndex
+                    continue
+                }
+                if ($sTrimmed -match '^\-\s+(\w[\w_-]+):\s+.+$') {
+                    # "- key: value" où value ne contient pas ": " → objet simple
+                    # On exclut "- |" et "- " seul
+                    $afterDash = $sTrimmed.Substring(2)
+                    if (-not ($afterDash -match '^\|') -and -not ($afterDash -match '^\s*$')) {
+                        $obj = Parse-YamlObject $lines $i $seqIndent
+                        $array += $obj.Item
+                        $i = $obj.NextIndex
+                        continue
+                    }
+                }
+
+                # === Item multi-ligne simple : "- |" ===
                 if ($sTrimmed -match '^\-\s+\|') {
                     $arrayItem = @()
                     $arrayBlockIndent = $null
@@ -145,28 +220,16 @@ function ConvertFrom-CommandSchoolYaml {
                         $bLine = $lines[$i]
                         $bIndent = $bLine.Length - $bLine.TrimStart().Length
                         $bTrimmed = $bLine.Trim()
-
-                        # End of array block: non-empty line at indent 0 = new root key
                         if ($bIndent -eq 0 -and -not [string]::IsNullOrWhiteSpace($bTrimmed)) { break }
-
-                        # End of array block: non-empty line with less indent than array content
                         if ($arrayBlockIndent -ne $null -and $bIndent -lt $arrayBlockIndent -and -not [string]::IsNullOrWhiteSpace($bTrimmed)) { break }
-
-                        if ($arrayBlockIndent -eq $null) {
-                            $arrayBlockIndent = $bIndent
-                        }
-
-                        # Empty lines at any indent are kept as blanks (paragraph separators)
-                        if ([string]::IsNullOrWhiteSpace($bTrimmed)) {
-                            $arrayItem += ""
-                        } else {
-                            $arrayItem += $bLine.Substring($arrayBlockIndent)
-                        }
+                        if ($arrayBlockIndent -eq $null) { $arrayBlockIndent = $bIndent }
+                        if ([string]::IsNullOrWhiteSpace($bTrimmed)) { $arrayItem += "" }
+                        else { $arrayItem += $bLine.Substring($arrayBlockIndent) }
                         $i++
                     }
                     $array += ($arrayItem -join "`n").TrimEnd()
                 }
-                # Item scalaire : "- value"
+                # === Item scalaire : "- value" ===
                 elseif ($sTrimmed -match '^\-\s+(.+)$') {
                     $array += ParseSimpleValue $Matches[1].Trim()
                     $i++
