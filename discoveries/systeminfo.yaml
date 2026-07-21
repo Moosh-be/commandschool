@@ -1,0 +1,102 @@
+# =============================================================================
+# Discovery : systeminfo
+# Catégorie : Système
+# Niveau : 1 (débutant)
+# Plateforme : Windows
+# =============================================================================
+
+title: "systeminfo — L'identité complète de ton ordinateur"
+category: "Système"
+level: 1
+platform: windows
+
+# ---------------------------------------------------------------------------
+# Commande à exécuter
+# ---------------------------------------------------------------------------
+command: "systeminfo"
+command_title: "Commande"
+
+# ---------------------------------------------------------------------------
+# Ce que l'utilisateur voit quand il exécute la commande
+# ---------------------------------------------------------------------------
+what_you_see: |
+  Une sortie très longue avec des sections :
+    - Host Name : le nom de l'ordinateur
+    - OS Name : le système d'exploitation installé
+    - OS Version : la version exacte
+    - System Type : architecture (x64, ARM...)
+    - Processor : le processeur
+    - Total Physical Memory : RAM totale
+    - Available Physical Memory : RAM libre
+    - Network Card(s) : les cartes réseau
+    - Domain : le domaine ou groupe de travail
+
+  Exemple :
+    Nom de l'hôte:           PC-CHLOE-11
+    Nom de l'OS:             Microsoft Windows 11 Enterprise
+    Version de l'OS:         10.0.22631 Build 22631
+    Type de système:         x64-based PC
+    Processeur(s):           1 processeur(s) installé(s).
+                             Intel(R) Core(TM) i7-12700H
+    Mémoire physique totale:  16 384 Mo
+    Mémoire physique disponible: 5 120 Mo
+
+# ---------------------------------------------------------------------------
+# Interprétation : que signifie ce que l'utilisateur voit
+# ---------------------------------------------------------------------------
+explanation: |
+  systeminfo te donne l'identité complète de ton ordinateur.
+  C'est la fiche d'identité technique que Windows maintient à jour.
+
+  Derrière chaque ligne, il y a une information qui a de la valeur :
+    - "OS Name" te dit si ton système est à jour
+    - "Total Physical Memory" te dit si tu as assez de RAM
+    - "Domain" te dit si ton ordinateur est géré par une entreprise
+
+  Ce qui est rarement visible : Windows maintient cette fiche
+  en temps réel. Chaque fois que tu branches une clé USB,
+  ajoutes de la RAM, ou changes de réseau Wi-Fi, systeminfo
+  reflète ces changements.
+
+  C'est la première information qu'un technicien IT te demandera
+  quand tu appelleras le support.
+
+# ---------------------------------------------------------------------------
+# Situations concrètes où cette information aide l'utilisateur
+# ---------------------------------------------------------------------------
+real_world_use_cases:
+  - |
+    **On te demande des infos pour débloquer un ticket IT**
+    Au lieu de naviguer dans les menus, systeminfo te donne tout
+    en 3 secondes. Copie-colle la sortie, le support aura tout.
+  - |
+    **Une application refuse de s'installer**
+    systeminfo montre l'architecture (x64) et la version de Windows.
+    Si tu as 32-bit au lieu de 64-bit, l'installateur peut refuser.
+  - |
+    **Ton PC est lent et tu veux savoir si c'est la RAM**
+    "Available Physical Memory" te donne la RAM réellement disponible.
+    Si c'est en dessous de 500 Mo, le système commence à utiliser
+    le fichier d'échange (beaucoup plus lent).
+  - |
+    **Tu ne sais pas si ton ordinateur est dans un domaine d'entreprise**
+    "Domain" te le confirme. Si c'est "WORKGROUP", ton PC est autonome.
+    Si c'est "DOMAINESCHOOL", ton entreprise le gère à distance.
+
+# ---------------------------------------------------------------------------
+# Pour aller plus loin : commandes et ressources supplémentaires
+# ---------------------------------------------------------------------------
+go_deeper:
+  - "systeminfo /FO CSV — Sortie format CSV (utilisable dans Excel)"
+  - "systeminfo /S PC-CHLOE-11 — Infos d'un ordinateur distant (si autorisé)"
+  - "Get-ComputerInfo — Alternative PowerShell complète"
+  - "Get-CimInstance Win32_OperatingSystem — Infos système détaillées"
+
+# ---------------------------------------------------------------------------
+# Commandes liées
+# ---------------------------------------------------------------------------
+related_commands:
+  - "systeminfo /FO CSV"
+  - "Get-ComputerInfo"
+  - "Get-CimInstance Win32_ComputerSystem"
+  - "wmic os get"

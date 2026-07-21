@@ -1,0 +1,92 @@
+# =============================================================================
+# Discovery : VaultCmd
+# Catégorie : Authentification
+# Niveau : 1 (débutant)
+# Plateforme : Windows uniquement
+# =============================================================================
+
+title: "VaultCmd — Tes identifiants stockés dans Windows"
+category: "Authentification"
+level: 1
+platform: windows
+
+# ---------------------------------------------------------------------------
+# Commande à exécuter
+# ---------------------------------------------------------------------------
+command: "VaultCmd /list"
+command_title: "Commande"
+
+# ---------------------------------------------------------------------------
+# Ce que l'utilisateur voit quand il exécute la commande
+# ---------------------------------------------------------------------------
+what_you_see: |
+  Une liste d'entrées avec :
+    - Credential Type : le type de stockage (Windows Credentials,
+      Generic Credentials, Domain Credentials, Certificate Store...)
+    - TargetName : le nom du service (ex: MicrosoftOffice16,
+      SharedPrivateKeyInformation, msteams...)
+    - PersistType : comment l'identifiant est sauvegardé
+      (LocalComputer, Enterprise, Session...)
+
+  Exemple de sortie :
+    ################################################################################
+    # TargetName: msteams
+    # CredentialType: Generic
+    # PersistType: Session
+    ###############################################################################
+
+# ---------------------------------------------------------------------------
+# Interprétation : que signifie ce que l'utilisateur voit
+# ---------------------------------------------------------------------------
+explanation: |
+  Windows stocke des informations d'authentification dans un compartiment
+  virtuel appelé "Credential Vault". Ces données permettent à certaines
+  applications de se connecter automatiquement sans te demander ton mot
+  de passe à chaque fois.
+
+  VaultCmd /list révèle tout ce qui est stocké. C'est comme voir la
+  liste des clés que ton ordinateur a gardées pour toi.
+
+  Pourquoi c'est important : ces identifiants sont la raison pour laquelle
+  certaines applications fonctionnent "tout seules" — et la raison pour
+  laquelle d'autres peuvent planter quand ils deviennent corrompus ou
+  périmés.
+
+# ---------------------------------------------------------------------------
+# Situations concrètes où cette information aide l'utilisateur
+# ---------------------------------------------------------------------------
+real_world_use_cases:
+  - |
+    **Teams ne se connecte pas**
+    Tu vois une entrée "msteams" ou "MSTST" dans le vault.
+    Si Teams plante au démarrage, les credentials peuvent être corrompus.
+    Les supprimer force Teams à re_demande_r le mot de passe, ce qui résout souvent le problème.
+  - |
+    **OneDrive ne synchronise plus**
+    Une entrée "SharePoint" ou "mso" peut bloquer la synchro.
+    Vérifier que les credentials existent et sont valides.
+  - |
+    **Accès refusé à SharePoint alors que tu y accédais avant**
+    Le token SSO stocké dans le vault peut être périmé.
+    Le purger force une nouvelle authentification.
+  - |
+    **SSO qui ne fonctionne plus après un changement de mot de passe**
+    Le vault conserve l'ancien mot de passe.
+    Les applications continuent d'utiliser l'ancien identifiant → erreur d'accès.
+
+# ---------------------------------------------------------------------------
+# Pour aller plus loin : commandes et ressources supplémentaires
+# ---------------------------------------------------------------------------
+go_deeper:
+  - "VaultCmd /listcreds /target:* — Voir le contenu détaillé de chaque identifiant"
+  - "cmdkey /list — Alternative plus simple pour lister les credentials"
+  - "rundll32 keymgr.dll,KRShowKeyMgr — Outil graphique Credential Manager"
+  - "secpol.msc — Gestionnaire de politique de sécurité (pour administrer les politiques d'authentification)"
+
+# ---------------------------------------------------------------------------
+# Commandes liées
+# ---------------------------------------------------------------------------
+related_commands:
+  - "cmdkey /list"
+  - "rundll32 keymgr.dll,KRShowKeyMgr"
+  - "VaultCmd /listcreds /target:*"

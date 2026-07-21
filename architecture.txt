@@ -1,0 +1,25 @@
+┌─────────────────────────────────────────────┐
+│              CommandSchool                   │
+│                                              │
+│   ┌───────────┐  ┌──────────────────────┐   │
+│   │  Launcher  │→│  PowerShell Engine   │   │
+│   │  (C# WPF)  │  │                      │   │
+│   │            │  │  ├─ Discovery Runner │   │
+│   │  CLI-only  │  │  ├─ Result Parser    │   │
+│   │  or GUI    │  │  └─ Markdown Renderer│   │
+│   └───────────┘  └──────────┬───────────┘   │
+│                             │                │
+│              ┌──────────────▼───────────┐   │
+│              │  Discovery Store (YAML)  │   │
+│              │                          │   │
+│              │  discoveries/            │   │
+│              │    vaultcmd.yaml         │   │
+│              │    whoami.yaml           │   │
+│              │    powercfg.yaml         │   │
+│              └──────────────────────────┘   │
+│                                              │
+│   ┌──────────────────────────────────────┐   │
+│   │  State Store (JSON)                  │   │
+│   │  state/last_discovery.json           │   │
+│   └──────────────────────────────────────┘   │
+└─────────────────────────────────────────────┘

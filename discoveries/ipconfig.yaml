@@ -1,0 +1,96 @@
+# =============================================================================
+# Discovery : ipconfig
+# Catégorie : Réseau
+# Niveau : 1 (débutant)
+# Plateforme : Windows
+# =============================================================================
+
+title: "ipconfig — Ta carte réseau en temps réel"
+category: "Réseau"
+level: 1
+platform: windows
+
+# ---------------------------------------------------------------------------
+# Commande à exécuter
+# ---------------------------------------------------------------------------
+command: "ipconfig"
+command_title: "Commande"
+
+# ---------------------------------------------------------------------------
+# Ce que l'utilisateur voit quand il exécute la commande
+# ---------------------------------------------------------------------------
+what_you_see: |
+  La configuration réseau de chaque adaptateur :
+    - Windows IP Configuration : résumé
+    - Ethernet adapter / Wireless LAN adapter : par carte
+    - IPv4 Address : ton adresse IP locale
+    - Subnet Mask : le masque du sous-réseau
+    - Default Gateway : l'adresse de ta passerelle (ta box/routeur)
+    - DHCP Server : qui t'a donné l'adresse IP
+    - DNS Server : les serveurs de noms utilisés
+
+  Exemple :
+    Connection-specific DNS Suffix  . : domaineschool.local
+    IPv4 Address. . . . . . . . . . : 10.20.30.45
+    Subnet Mask . . . . . . . . . . : 255.255.255.0
+    Default Gateway . . . . . . . . : 10.20.30.1
+
+# ---------------------------------------------------------------------------
+# Interprétation : que signifie ce que l'utilisateur voit
+# ---------------------------------------------------------------------------
+explanation: |
+  Derrière chaque connexion réseau, ton ordinateur possède une
+  identité numérique : son adresse IP. ipconfig la révèle.
+
+  IPv4 Address (10.20.30.45) est ton adresse sur le réseau.
+  Elle permet aux autres ordinateurs de te trouver. Elle est
+  donnée par le DHCP Server (généralement la box ou le serveur
+  Windows de l'entreprise).
+
+  Default Gateway (10.20.30.1) est la porte de sortie. C'est
+  ton routeur ou ta box. Tout le trafic qui sort de ton réseau
+  passe par là.
+
+  DNS Server est l'annuaire qui transforme "sharepoint.domaineschool.local"
+  en adresse IP. Sans DNS, Internet ne fonctionne pas — mais tu
+  ne le vois pas. ipconfig te montre qui fait ce travail.
+
+# ---------------------------------------------------------------------------
+# Situations concrètes où cette information aide l'utilisateur
+# ---------------------------------------------------------------------------
+real_world_use_cases:
+  - |
+    **Tu ne peux pas accéder à Internet mais le Wi-Fi fonctionne**
+    ipconfig montre si tu as une IP valide (169.254.x.x = erreur DHCP).
+    ipconfig /release et ipconfig /renew redemandent une IP au serveur.
+  - |
+    **Tu dois configurer une application qui doit accéder à ton PC**
+    L'adresse IPv4 Address est celle que tu dois renseigner.
+    Sans ipconfig, tu la cherches dans les menus pendant 5 minutes.
+  - |
+    **Changement de réseau : l'ordinateur garde l'ancienne config**
+    ipconfig /flushdns vide le cache DNS pour forcer une mise à jour.
+    C'est utile quand tu changes de Wi-Fi et que les noms ne résolvent plus.
+  - |
+    **Tu veux savoir si tu es sur le réseau entreprise ou sur un Wi-Fi public**
+    Si l'IP est dans 10.x.x.x ou 192.168.x.x → réseau local.
+    Si elle est dans 169.254.x.x → aucune configuration DHCP reçue.
+
+# ---------------------------------------------------------------------------
+# Pour aller plus loin : commandes et ressources supplémentaires
+# ---------------------------------------------------------------------------
+go_deeper:
+  - "ipconfig /all — Voir la configuration détaillée (MAC, DNS, DHCP)"
+  - "ipconfig /flushdns — Vider le cache DNS"
+  - "ipconfig /release + ipconfig /renew — Renouveler l'adresse IP"
+  - "ipconfig /displaydns — Voir le cache DNS actuel"
+
+# ---------------------------------------------------------------------------
+# Commandes liées
+# ---------------------------------------------------------------------------
+related_commands:
+  - "ipconfig /all"
+  - "ipconfig /flushdns"
+  - "ipconfig /release"
+  - "ipconfig /renew"
+  - "Get-NetIPConfiguration — Alternative PowerShell"

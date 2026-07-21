@@ -1,0 +1,95 @@
+# =============================================================================
+# Discovery : hostname
+# Catégorie : Identité
+# Niveau : 1 (débutant)
+# Plateforme : Windows
+# =============================================================================
+
+title: "hostname — Le nom de ton ordinateur sur le réseau"
+category: "Identité"
+level: 1
+platform: windows
+
+# ---------------------------------------------------------------------------
+# Commande à exécuter
+# ---------------------------------------------------------------------------
+command: "hostname"
+command_title: "Commande"
+
+# ---------------------------------------------------------------------------
+# Ce que l'utilisateur voit quand il exécute la commande
+# ---------------------------------------------------------------------------
+what_you_see: |
+  Une seule ligne : le nom de l'ordinateur.
+
+  Exemple :
+    PC-CHLOE-11
+
+  Avec le paramètre /all :
+    Host Name. . . . . . . . . . . . : PC-CHLOE-11
+    DNS Suffix . . . . . . . . . . . : domaineschool.local
+    Search Suffixes. . . . . . . . . : domaineschool.local, internal.domaineschool.com
+
+# ---------------------------------------------------------------------------
+# Interprétation : que signifie ce que l'utilisateur voit
+# ---------------------------------------------------------------------------
+explanation: |
+  "PC-CHLOE-11" n'est pas juste un nom affiché dans les propriétés
+  du système. C'est l'identifiant que ton ordinateur utilise pour
+  communiquer sur le réseau.
+
+  Quand tu partages un fichier, imprimes, ou te connectes à un
+  serveur, Windows utilise ce nom. Le DNS le traduit en adresse
+  IP pour que les autres appareils te trouvent.
+
+  Dans une entreprise, le nom suit souvent un format标准 :
+    - PC-nom-prenom-numéro
+    - WORKSTATION-dept-numero
+    - OU-NumeroDeMachine
+
+  Ce format standard permet à l'IT de savoir :
+    - Quel département (le préfixe OU ou dept)
+    - Quel utilisateur (le prénom dans le nom)
+    - Quel numéro de machine (pour le suivi)
+
+# ---------------------------------------------------------------------------
+# Situations concrètes où cette information aide l'utilisateur
+# ---------------------------------------------------------------------------
+real_world_use_cases:
+  - |
+    **Partage de fichiers entre ordinateurs**
+    Tu dois taper le nom de l'ordinateur de ton collègue pour
+    accéder à ses dossiers. hostname te rappelle comment on
+    appelle ton propre PC depuis le réseau.
+  - |
+    **Un ticket IT demande "le nom de la machine"**
+    hostname te le donne instantanément. Inutile de chercher
+    dans les paramètres.
+  - |
+    **Le nom de ton ordinateur ne correspond pas à ce que tu attends**
+    hostname révèle le nom réel. Parfois il est "USER-PC" par défaut
+    et non "USER-Nom" comme espéré. C'est un problème si ton
+    entreprise a un format standard.
+  - |
+    **hostname /all révèle le DNS suffix**
+    Si tu travailles sur un ordinateur de domaine, le DNS suffix
+    (domaineschool.local) te dit dans quel domaine Windows te
+    cherche automatiquement.
+
+# ---------------------------------------------------------------------------
+# Pour aller plus loin : commandes et ressources supplémentaires
+# ---------------------------------------------------------------------------
+go_deeper:
+  - "hostname /all — Voir le nom complet avec DNS suffix"
+  - "hostname -F" ou "hostname /f — Afficher le nom de domaine complet"
+  - "Get-ComputerInfo | Select CsName — Alternative PowerShell"
+  - "systeminfo | findstr /B /C:\"Nom de l'hôte\" — Alternative via systeminfo"
+
+# ---------------------------------------------------------------------------
+# Commandes liées
+# ---------------------------------------------------------------------------
+related_commands:
+  - "hostname /all"
+  - "hostname /f"
+  - "Get-ComputerInfo | Select CsName"
+  - "systeminfo | findstr \"Nom de l'hôte\""

@@ -1,0 +1,90 @@
+# =============================================================================
+# Discovery : Whoami
+# Catégorie : Identité
+# Niveau : 1 (débutant)
+# Plateforme : Windows
+# =============================================================================
+
+title: "Whoami — Qui es-tu vraiment sur ton ordinateur ?"
+category: "Identité"
+level: 1
+platform: windows
+
+# ---------------------------------------------------------------------------
+# Commande à exécuter
+# ---------------------------------------------------------------------------
+command: "whoami"
+command_title: "Commande"
+
+# ---------------------------------------------------------------------------
+# Ce que l'utilisateur voit quand il exécute la commande
+# ---------------------------------------------------------------------------
+what_you_see: |
+  Une ligne au format : domaine\nom_utilisateur
+
+  Exemple :
+    domainschool\chloe.martin
+
+  Avec le paramètre /all, tu vois bien plus :
+    - L'identité actuelle (SID, groupes, privilèges)
+    - Le contexte d'authentification (NTLM, Kerberos)
+    - Les tokens de sécurité actifs
+
+# ---------------------------------------------------------------------------
+# Interprétation : que signifie ce que l'utilisateur voit
+# ---------------------------------------------------------------------------
+explanation: |
+  "domaine\nom_utilisateur" n'est pas qu'une chaîne de caractères.
+  C'est ton identité numérique sur l'ordinateur.
+
+  Le SID (Security Identifier) est l'identité unique que Windows
+  associe à ton compte. Contrairement à ton nom, le SID ne change
+  jamais, même si tu changes de nom d'affichage.
+
+  C'est lui qui détermine tout : les fichiers que tu peux lire,
+  les imprimantes que tu peux utiliser, les sites que tu peux visiter.
+
+  Quand tu vois "domainschool\chloe.martin", tu vois un masque.
+  Derrière, Windows gère un SID, des groupes de sécurité, des
+  privilèges, et des tokens. C'est ce qui fait fonctionner ou
+  planter l'accès à un réseau d'entreprise.
+
+# ---------------------------------------------------------------------------
+# Situations concrètes où cette information aide l'utilisateur
+# ---------------------------------------------------------------------------
+real_world_use_cases:
+  - |
+    **Impossible d'accéder à un dossier réseau**
+    Tu tapes \\serveur\dossier et tu obtiens "Accès refusé".
+    whoami te confirme si tu es bien identifié avec le bon compte.
+    Parfois tu es connecté avec un ancien compte ou un compte invité.
+  - |
+    **Un fichier que tu pouvais modifier est devenu en lecture seule**
+    Ton SID a changé (nouveau profil, migration).
+    Les permissions sur le fichier sont encore liées à l'ancien SID.
+  - |
+    **Tu vois "domaine1\paul" au lieu de "domaine2\paul" dans Excel**
+    Windows utilise un compte différent de celui attendu.
+    quiami /all montre le SID, qui est différent même si le nom est pareil.
+  - |
+    **Le partage d'écran Teams ne fonctionne pas sur un PC de domaine**
+    Les stratégies de domaine peuvent restreindre certaines fonctionnalités
+    selon le SID et les groupes d'appartenance.
+
+# ---------------------------------------------------------------------------
+# Pour aller plus loin : commandes et ressources supplémentaires
+# ---------------------------------------------------------------------------
+go_deeper:
+  - "whoami /all — Voir ton identité complète avec SID et groupes"
+  - "whoami /groups — Voir uniquement les groupes de sécurité"
+  - "whoami /priv — Voir tes privilèges actifs"
+  - "Get-Process -Id $PID — Voir sous quel compte le processus tourne"
+
+# ---------------------------------------------------------------------------
+# Commandes liées
+# ---------------------------------------------------------------------------
+related_commands:
+  - "whoami /user"
+  - "whoami /groups"
+  - "whoami /priv"
+  - "echo %USERNAME%"

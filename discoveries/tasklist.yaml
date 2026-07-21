@@ -1,0 +1,97 @@
+# =============================================================================
+# Discovery : tasklist
+# Catégorie : Processus
+# Niveau : 1 (débutant)
+# Plateforme : Windows
+# =============================================================================
+
+title: "tasklist — Tous les programmes cachés dans ta session"
+category: "Processus"
+level: 1
+platform: windows
+
+# ---------------------------------------------------------------------------
+# Commande à exécuter
+# ---------------------------------------------------------------------------
+command: "tasklist"
+command_title: "Commande"
+
+# ---------------------------------------------------------------------------
+# Ce que l'utilisateur voit quand il exécute la commande
+# ---------------------------------------------------------------------------
+what_you_see: |
+  Une liste de tous les processus en cours :
+    - Nom de l'image : le nom du programme (ex: msedge.exe)
+    - PID : le numéro unique du processus
+    - Session name : le nom de ta session
+    - Session# : le numéro de session
+    - Mémoire (Ko) : quantité de RAM utilisée
+
+  Exemple :
+    Nom de l'image               PID Session         Mémoire
+    ========================= ====== ====== ========
+    System Idle Process              0 Console         28 Ko
+    System                           4 Console       252 Ko
+    csrss.exe                      612 Console    11 264 Ko
+    WINWORD.EXAMPLE               15234 Console  245 680 Ko
+    msedge.exe                    12870 Console  512 440 Ko
+
+# ---------------------------------------------------------------------------
+# Interprétation : que signifie ce que l'utilisateur voit
+# ---------------------------------------------------------------------------
+explanation: |
+  Quand tu cliques sur Word, Excel et ton navigateur, tu vois trois
+  fenêtres. Mais derrière ces trois fenêtres, il y a des dizaines
+  de processus qui tournent en silence.
+
+  tasklist les rend visibles. Chaque processus a un PID, une taille
+  mémoire, et un propriétaire. C'est le système d'exploitation qui
+  les gère, pas toi.
+
+  Ce qui est surprenant : Windows lui-même utilise des processus
+  invisibles dans l'interface (svchost.exe, csrss.exe, services.exe).
+  Et chaque application que tu lances en crée souvent plusieurs
+  autres (Chrome en crée un par onglet).
+
+  Comprendre que tout processus est un programme qui consomme
+  des ressources explique pourquoi ton ordinateur ralentit parfois
+  sans raison apparente.
+
+# ---------------------------------------------------------------------------
+# Situations concrètes où cette information aide l'utilisateur
+# ---------------------------------------------------------------------------
+real_world_use_cases:
+  - |
+    **L'ordinateur ralentit après quelques heures d'utilisation**
+    tasklist révèle des processus qui ont consomme trop de RAM.
+    Tu peux identifier lequel et le fermer ou vérifier si c'est normal.
+  - |
+    **Word semble bloqué mais n'apparaît pas dans le Gestionnaire des tâches**
+    tasklist le montre encore. Parfois la fenêtre est masquée.
+    taskkill /IM winword.exe /F force la fermeture.
+  - |
+    **Une mise à jour Windows plante car un processus bloque le fichier**
+    tasklist te montre quel processus (windowsupdate.exe, sihost.exe...)
+    empêche la mise à jour.
+  - |
+    **Tu veux savoir combien de ressources consomme ton navigateur**
+    tasklist /FI "IMAGENAME eq msedge.exe" te donne la RAM utilisée
+    par toutes les instances d'Edge.
+
+# ---------------------------------------------------------------------------
+# Pour aller plus loin : commandes et ressources supplémentaires
+# ---------------------------------------------------------------------------
+go_deeper:
+  - "tasklist /FI \"IMAGENAME eq msedge.exe\" — Filtrer par nom"
+  - "tasklist /V — Voir les détails (nom du service, statut)"
+  - "tasklist /M — Voir les DLL chargées dans chaque processus"
+  - "taskkill /IM nom.exe /F — Forcer la fermeture d'un processus"
+
+# ---------------------------------------------------------------------------
+# Commandes liées
+# ---------------------------------------------------------------------------
+related_commands:
+  - "tasklist /V"
+  - "tasklist /FI \"MEMUSAGE gt 100000\""
+  - "taskkill /IM nom.exe /F"
+  - "Get-Process — Alternative PowerShell"

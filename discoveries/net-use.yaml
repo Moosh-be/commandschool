@@ -1,0 +1,94 @@
+# =============================================================================
+# Discovery : net use
+# Catégorie : Réseau & Partages
+# Niveau : 1 (débutant)
+# Plateforme : Windows
+# =============================================================================
+
+title: "net use — Les lecteurs réseau connectés"
+category: "Réseau & Partages"
+level: 1
+platform: windows
+
+# ---------------------------------------------------------------------------
+# Commande à exécuter
+# ---------------------------------------------------------------------------
+command: "net use"
+command_title: "Commande"
+
+# ---------------------------------------------------------------------------
+# Ce que l'utilisateur voit quand il exécute la commande
+# ---------------------------------------------------------------------------
+what_you_see: |
+  Une liste des connexions réseau actives :
+    - État : OK (connecté), Déconnecté, Erreur
+    - Letter : lettre du lecteur mappé (Z:, Y:, etc.)
+    - Remote name : adresse du serveur (\\serveur\dossier)
+    - Username : sous quel compte tu es connecté
+    - Network : pilote réseau utilisé
+
+  Exemple :
+    État         Lettre  Remote                  Network
+    ----------------------------------------------------------------------------
+    OK           Z:      \\serveur\dossiers      Microsoft Windows Network
+    OK           Y:      \\serveur-partages\sp   Microsoft Windows Network
+                              Le projet est terminé.
+
+# ---------------------------------------------------------------------------
+# Interprétation : que signifie ce que l'utilisateur voit
+# ---------------------------------------------------------------------------
+explanation: |
+  Quand tu double-cliques sur "Ce PC" et que tu vois des lecteurs
+  Z: ou Y: en plus de C: et D:, tu vois des connexions réseau.
+  Mais tu ne vois pas qui, comment, et depuis quand.
+
+  net use révèle tout cela. Chaque lecteur réseau est une session
+  active maintenue par Windows. Si la connexion est active, un
+  ticket d'authentification est maintenu en mémoire.
+
+  Derrière Z:\\serveur\dossiers, il y a un protocole (SMB), un
+  compte d'authentification, et une session réseau ouverte.
+  Si le serveur redémarre, la connexion peut rester "OK" sans
+  que tu ne puisses rien lire. C'est ce qu'on appelle une
+  connexion zombie.
+
+# ---------------------------------------------------------------------------
+# Situations concrètes où cette information aide l'utilisateur
+# ---------------------------------------------------------------------------
+real_world_use_cases:
+  - |
+    **Un lecteur réseau apparaît comme "OK" mais ne s'ouvre pas**
+    Le serveur a redémarré mais Windows n'a pas mis à jour le statut.
+    net use montre que la connexion est inactive. net use Z: /delete
+    puis reconnecter résout le problème.
+  - |
+    **Impossible d'accéder à \\serveur\partage alors que les autres oui**
+    net use te montre que tu es connecté sous un autre compte.
+    net use \\serveur\partage /user:domaine\ton_nom recrée la connexion
+    avec le bon compte.
+  - |
+    **Le partage SharePoint ne se monte pas comme lecteur réseau**
+    Parfois le montage réseau (Z:) se déconnecte.
+    Vérifier avec net use que la session est active.
+  - |
+    **Un fichier ouvert sur le réseau devient introuvable**
+    La session réseau a pu être coupée.
+    net use montre si la connexion est encore active.
+
+# ---------------------------------------------------------------------------
+# Pour aller plus loin : commandes et ressources supplémentaires
+# ---------------------------------------------------------------------------
+go_deeper:
+  - "net use Z: \\\\serveur\\dossier — Monter un lecteur réseau"
+  - "net use Z: /delete — Déconnecter un lecteur réseau"
+  - "net use * /delete — Déconnecter toutes les connexions réseaux"
+  - "net use \\\\serveur\\dossier /user:domaine\\nom — Se connecter avec un autre compte"
+
+# ---------------------------------------------------------------------------
+# Commandes liées
+# ---------------------------------------------------------------------------
+related_commands:
+  - "net use Z: \\\\serveur\\dossier"
+  - "net use /delete"
+  - "Get-PSDrive -PSProvider FileSystem — Alternative PowerShell"
+  - "New-PSDrive — Monter un lecteur en PowerShell"

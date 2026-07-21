@@ -1,0 +1,32 @@
+# =============================================================================
+# .gitignore
+# CommandSchool - Ignore les fichiers locaux et temporaires
+# =============================================================================
+
+# État local (utilisateur spécifique)
+state/
+*.json
+
+# Fichiers temporaires
+*.tmp
+$null
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PowerShell
+*.ps1xml
+*.cat
+*.psd1
+*.pssc
+*.xsd
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.user
