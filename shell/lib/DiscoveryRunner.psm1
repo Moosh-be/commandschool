@@ -53,6 +53,15 @@ function Invoke-CommandSchoolCommand {
     }
     $result.Shell = $CommandShell
 
+    # Valider que la commande commence par un nom valide (pas par -- ou -)
+    $baseCommand = $CommandLine.Trim() -split '\s' | Select-Object -First 1
+    if ($baseCommand -match '^-' -and $baseCommand -notmatch '^`') {
+        $result.Error = "Commande invalide : '$CommandLine'. Une découverte contient une commande malformée (ne doit pas commencer par '-')."
+        $result.Success = $false
+        $result.ExitCode = -1
+        return $result
+    }
+
     # Construire la commande à exécuter selon le shell
     $scriptToRun = ""
     $shellExe = ""

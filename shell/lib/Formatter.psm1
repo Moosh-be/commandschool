@@ -32,9 +32,9 @@ function Format-DiscoveryOutput {
     # En-tête
     # =====================================================================
     Write-Host ""
-    Write-Host "╔══════════════════════════════════════════════════════════════╗" -ForegroundColor DarkCyan
-    Write-Host "║                    CommandSchool                           ║" -ForegroundColor DarkCyan
-    Write-Host "╚══════════════════════════════════════════════════════════════╝" -ForegroundColor DarkCyan
+    Write-Host "==============================================================" -ForegroundColor DarkCyan
+    Write-Host "                   CommandSchool                           " -ForegroundColor DarkCyan
+    Write-Host "==============================================================" -ForegroundColor DarkCyan
     Write-Host ""
 
     # Titre de la découverte
@@ -50,7 +50,7 @@ function Format-DiscoveryOutput {
     # =====================================================================
     # Commande
     # =====================================================================
-    Write-Host "  ────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
+    Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host ""
     Write-Host "  $($Discovery.command_title)" -ForegroundColor Yellow
     Write-Host "  $($Discovery.command)" -ForegroundColor Green
@@ -60,7 +60,7 @@ function Format-DiscoveryOutput {
     # Ce que l'utilisateur voit
     # =====================================================================
     if ($Discovery.what_you_see) {
-        Write-Host "  ────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
+        Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
         Write-Host ""
         Write-Host "  Ce que tu vois :" -ForegroundColor Yellow
         Write-Host ""
@@ -71,7 +71,7 @@ function Format-DiscoveryOutput {
     # =====================================================================
     # Résultat de la commande
     # =====================================================================
-    Write-Host "  ────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
+    Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host ""
     Write-Host "  Ce que ton ordinateur dit :" -ForegroundColor Yellow
     Write-Host ""
@@ -97,7 +97,7 @@ function Format-DiscoveryOutput {
     # Interprétation
     # =====================================================================
     if ($Discovery.explanation) {
-        Write-Host "  ────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
+        Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
         Write-Host ""
         Write-Host "  Ce que cela signifie :" -ForegroundColor Yellow
         Write-Host ""
@@ -109,7 +109,7 @@ function Format-DiscoveryOutput {
     # Cas d'usage réels
     # =====================================================================
     if ($Discovery.real_world_use_cases -and $Discovery.real_world_use_cases.Count -gt 0) {
-        Write-Host "  ────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
+        Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
         Write-Host ""
         Write-Host "  Quand cela t'aide :" -ForegroundColor Yellow
         Write-Host ""
@@ -127,7 +127,7 @@ function Format-DiscoveryOutput {
     # Pour aller plus loin
     # =====================================================================
     if ($Discovery.go_deeper -and $Discovery.go_deeper.Count -gt 0) {
-        Write-Host "  ────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
+        Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
         Write-Host ""
         Write-Host "  Pour aller plus loin :" -ForegroundColor Yellow
         Write-Host ""
@@ -146,7 +146,7 @@ function Format-DiscoveryOutput {
     # Commandes liées
     # =====================================================================
     if ($Discovery.related_commands -and $Discovery.related_commands.Count -gt 0) {
-        Write-Host "  ────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
+        Write-Host "  --------------------------------------------------------------------" -ForegroundColor DarkGray
         Write-Host ""
         Write-Host "  Autres commandes de cette famille :" -ForegroundColor Yellow
         Write-Host ""
@@ -165,9 +165,9 @@ function Format-DiscoveryOutput {
     # =====================================================================
     Write-Host ""
     Write-Host "  Pour continuer à explorer :" -ForegroundColor DarkCyan
-    Write-Host "    pwsh ./shell/cmdschool.ps1 random        → Découverte aléatoire" -ForegroundColor DarkGray
-    Write-Host "    pwsh ./shell/cmdschool.ps1 list          → Toutes les découvertes" -ForegroundColor DarkGray
-    Write-Host "    pwsh ./shell/cmdschool.ps1 help          → Toutes les commandes" -ForegroundColor DarkGray
+    Write-Host "    pwsh ./shell/cmdschool.ps1 random        --> Découverte aléatoire" -ForegroundColor DarkGray
+    Write-Host "    pwsh ./shell/cmdschool.ps1 list          --> Toutes les découvertes" -ForegroundColor DarkGray
+    Write-Host "    pwsh ./shell/cmdschool.ps1 help          --> Toutes les commandes" -ForegroundColor DarkGray
     Write-Host ""
 }
 
@@ -221,9 +221,9 @@ function Format-DiscoveryHelp {
         Affiche l'aide de la ligne de commande
     #>
     Write-Host ""
-    Write-Host "╔══════════════════════════════════════════════════════════════╗" -ForegroundColor DarkCyan
-    Write-Host "║              CommandSchool - Aide                          ║" -ForegroundColor DarkCyan
-    Write-Host "╚══════════════════════════════════════════════════════════════╝" -ForegroundColor DarkCyan
+    Write-Host "==============================================================" -ForegroundColor DarkCyan
+    Write-Host "              CommandSchool - Aide                          " -ForegroundColor DarkCyan
+    Write-Host "==============================================================" -ForegroundColor DarkCyan
     Write-Host ""
     Write-Host "  Utilisation : cmdschool.ps1 [commande] [arguments]" -ForegroundColor Yellow
     Write-Host ""
@@ -252,9 +252,9 @@ function Format-About {
         Affiche les informations sur CommandSchool
     #>
     Write-Host ""
-    Write-Host "╔══════════════════════════════════════════════════════════════╗" -ForegroundColor DarkCyan
-    Write-Host "║              CommandSchool                                 ║" -ForegroundColor DarkCyan
-    Write-Host "╚══════════════════════════════════════════════════════════════╝" -ForegroundColor DarkCyan
+    Write-Host "==============================================================" -ForegroundColor DarkCyan
+    Write-Host "              CommandSchool                                 " -ForegroundColor DarkCyan
+    Write-Host "==============================================================" -ForegroundColor DarkCyan
     Write-Host ""
     Write-Host "  CommandSchool est un outil de sensibilisation à la culture" -ForegroundColor White
     Write-Host "  numérique pour Windows." -ForegroundColor White
