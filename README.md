@@ -14,6 +14,26 @@ La phrase qu'on veut provoquer :
 
 > *"Je ne savais pas que mon ordinateur savait ça."*
 
+## Démarrage rapide
+
+En quelques secondes, commence à explorer :
+
+```cmd
+cmdschool random
+```
+
+```powershell
+.\cmdschool.ps1 random
+```
+
+Ensuite :
+
+```powershell
+.\cmdschool.ps1 list        # Voir toutes les découvertes
+.\cmdschool.ps1 categories   # Explorer par catégorie
+.\cmdschool.ps1 discover whoami  # Découverte spécifique
+```
+
 ## Utilisation
 
 ### Depuis CMD (recommandé)
@@ -71,8 +91,10 @@ Pas d'administration système. Pas de scripts complexes. Juste de la curiosité 
 
 ```
 CommandSchool/
+├── cmdschool.ps1           ← Point d'entrée racine (PowerShell)
+├── cmdschool.cmd           ← Point d'entrée racine (CMD)
 ├── shell/
-│   ├── cmdschool.ps1           ← Point d'entrée unique
+│   ├── cmdschool.ps1       ← Script principal
 │   └── lib/
 │       ├── DiscoveryStore.psm1 ← Parseur YAML maison
 │       ├── DiscoveryRunner.psm1← Exécution de commandes
