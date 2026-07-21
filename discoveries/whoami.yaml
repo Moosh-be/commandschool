@@ -10,15 +10,9 @@ category: "Identité"
 level: 1
 platform: windows
 
-# ---------------------------------------------------------------------------
-# Commande à exécuter
-# ---------------------------------------------------------------------------
 command: "whoami"
 command_title: "Commande"
 
-# ---------------------------------------------------------------------------
-# Ce que l'utilisateur voit quand il exécute la commande
-# ---------------------------------------------------------------------------
 what_you_see: |
   Une ligne au format : domaine\nom_utilisateur
 
@@ -30,12 +24,9 @@ what_you_see: |
     - Le contexte d'authentification (NTLM, Kerberos)
     - Les tokens de sécurité actifs
 
-# ---------------------------------------------------------------------------
-# Interprétation : que signifie ce que l'utilisateur voit
-# ---------------------------------------------------------------------------
 explanation: |
-  "domaine\nom_utilisateur" n'est pas qu'une chaîne de caractères.
-  C'est ton identité numérique sur l'ordinateur.
+  "domaine\nom_utilisateur" n'est pas juste un nom affiché dans un
+  coin de ton écran. C'est ton identité numérique sur l'ordinateur.
 
   Le SID (Security Identifier) est l'identité unique que Windows
   associe à ton compte. Contrairement à ton nom, le SID ne change
@@ -49,40 +40,35 @@ explanation: |
   privilèges, et des tokens. C'est ce qui fait fonctionner ou
   planter l'accès à un réseau d'entreprise.
 
-# ---------------------------------------------------------------------------
-# Situations concrètes où cette information aide l'utilisateur
-# ---------------------------------------------------------------------------
 real_world_use_cases:
-  - |
-    **Impossible d'accéder à un dossier réseau**
-    Tu tapes \\serveur\dossier et tu obtiens "Accès refusé".
-    whoami te confirme si tu es bien identifié avec le bon compte.
-    Parfois tu es connecté avec un ancien compte ou un compte invité.
-  - |
-    **Un fichier que tu pouvais modifier est devenu en lecture seule**
-    Ton SID a changé (nouveau profil, migration).
-    Les permissions sur le fichier sont encore liées à l'ancien SID.
-  - |
-    **Tu vois "domaine1\paul" au lieu de "domaine2\paul" dans Excel**
-    Windows utilise un compte différent de celui attendu.
-    quiami /all montre le SID, qui est différent même si le nom est pareil.
-  - |
-    **Le partage d'écran Teams ne fonctionne pas sur un PC de domaine**
-    Les stratégies de domaine peuvent restreindre certaines fonctionnalités
-    selon le SID et les groupes d'appartenance.
+  - text: |
+      **Impossible d'accéder à un dossier réseau**
+      Tu tapes \\serveur\dossier et tu obtiens "Accès refusé".
+      whoami te confirme si tu es bien identifié avec le bon compte.
+      Parfois tu es connecté avec un ancien compte ou un compte invité.
+    example: "whoami /all"
+  - text: |
+      **Un fichier que tu pouvais modifier est devenu en lecture seule**
+      Ton SID a changé (nouveau profil, migration).
+      Les permissions sur le fichier sont encore liées à l'ancien SID.
+    example: "whoami /user"
+  - text: |
+      **Tu vois "domaine1\paul" au lieu de "domaine2\paul" dans Excel**
+      Windows utilise un compte différent de celui attendu.
+      qui ami /all montre le SID, qui est différent même si le nom est pareil.
+    example: "whoami /groups"
+  - text: |
+      **Le partage d'écran Teams ne fonctionne pas sur un PC de domaine**
+      Les stratégies de domaine peuvent restreindre certaines fonctionnalités
+      selon le SID et les groupes d'appartenance.
+    example: "whoami /priv"
 
-# ---------------------------------------------------------------------------
-# Pour aller plus loin : commandes et ressources supplémentaires
-# ---------------------------------------------------------------------------
 go_deeper:
   - "whoami /all — Voir ton identité complète avec SID et groupes"
   - "whoami /groups — Voir uniquement les groupes de sécurité"
   - "whoami /priv — Voir tes privilèges actifs"
   - "Get-Process -Id $PID — Voir sous quel compte le processus tourne"
 
-# ---------------------------------------------------------------------------
-# Commandes liées
-# ---------------------------------------------------------------------------
 related_commands:
   - "whoami /user"
   - "whoami /groups"

@@ -10,15 +10,9 @@ category: "Réseau & Partages"
 level: 1
 platform: windows
 
-# ---------------------------------------------------------------------------
-# Commande à exécuter
-# ---------------------------------------------------------------------------
 command: "net use"
 command_title: "Commande"
 
-# ---------------------------------------------------------------------------
-# Ce que l'utilisateur voit quand il exécute la commande
-# ---------------------------------------------------------------------------
 what_you_see: |
   Une liste des connexions réseau actives :
     - État : OK (connecté), Déconnecté, Erreur
@@ -34,9 +28,6 @@ what_you_see: |
     OK           Y:      \\serveur-partages\sp   Microsoft Windows Network
                               Le projet est terminé.
 
-# ---------------------------------------------------------------------------
-# Interprétation : que signifie ce que l'utilisateur voit
-# ---------------------------------------------------------------------------
 explanation: |
   Quand tu double-cliques sur "Ce PC" et que tu vois des lecteurs
   Z: ou Y: en plus de C: et D:, tu vois des connexions réseau.
@@ -52,41 +43,36 @@ explanation: |
   que tu ne puisses rien lire. C'est ce qu'on appelle une
   connexion zombie.
 
-# ---------------------------------------------------------------------------
-# Situations concrètes où cette information aide l'utilisateur
-# ---------------------------------------------------------------------------
 real_world_use_cases:
-  - |
-    **Un lecteur réseau apparaît comme "OK" mais ne s'ouvre pas**
-    Le serveur a redémarré mais Windows n'a pas mis à jour le statut.
-    net use montre que la connexion est inactive. net use Z: /delete
-    puis reconnecter résout le problème.
-  - |
-    **Impossible d'accéder à \\serveur\partage alors que les autres oui**
-    net use te montre que tu es connecté sous un autre compte.
-    net use \\serveur\partage /user:domaine\ton_nom recrée la connexion
-    avec le bon compte.
-  - |
-    **Le partage SharePoint ne se monte pas comme lecteur réseau**
-    Parfois le montage réseau (Z:) se déconnecte.
-    Vérifier avec net use que la session est active.
-  - |
-    **Un fichier ouvert sur le réseau devient introuvable**
-    La session réseau a pu être coupée.
-    net use montre si la connexion est encore active.
+  - text: |
+      **Un lecteur réseau apparaît comme "OK" mais ne s'ouvre pas**
+      Le serveur a redémarré mais Windows n'a pas mis à jour le statut.
+      net use montre que la connexion est inactive. net use Z: /delete
+      puis reconnecter résout le problème.
+    example: "net use Z: /delete"
+  - text: |
+      **Impossible d'accéder à \\serveur\partage alors que les autres oui**
+      net use te montre que tu es connecté sous un autre compte.
+      net use \\serveur\partage /user:domaine\ton_nom recrée la connexion
+      avec le bon compte.
+    example: "net use \\serveur\\partage /user:domaine\\ton_nom"
+  - text: |
+      **Le partage SharePoint ne se monte pas comme lecteur réseau**
+      Parfois le montage réseau (Z:) se déconnecte.
+      Vérifier avec net use que la session est active.
+    example: "net use"
+  - text: |
+      **Un fichier ouvert sur le réseau devient introuvable**
+      La session réseau a pu être coupée.
+      net use montre si la connexion est encore active.
+    example: "net use * /delete"
 
-# ---------------------------------------------------------------------------
-# Pour aller plus loin : commandes et ressources supplémentaires
-# ---------------------------------------------------------------------------
 go_deeper:
   - "net use Z: \\\\serveur\\dossier — Monter un lecteur réseau"
   - "net use Z: /delete — Déconnecter un lecteur réseau"
   - "net use * /delete — Déconnecter toutes les connexions réseaux"
   - "net use \\\\serveur\\dossier /user:domaine\\nom — Se connecter avec un autre compte"
 
-# ---------------------------------------------------------------------------
-# Commandes liées
-# ---------------------------------------------------------------------------
 related_commands:
   - "net use Z: \\\\serveur\\dossier"
   - "net use /delete"

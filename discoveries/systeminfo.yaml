@@ -10,15 +10,9 @@ category: "Système"
 level: 1
 platform: windows
 
-# ---------------------------------------------------------------------------
-# Commande à exécuter
-# ---------------------------------------------------------------------------
 command: "systeminfo"
 command_title: "Commande"
 
-# ---------------------------------------------------------------------------
-# Ce que l'utilisateur voit quand il exécute la commande
-# ---------------------------------------------------------------------------
 what_you_see: |
   Une sortie très longue avec des sections :
     - Host Name : le nom de l'ordinateur
@@ -41,9 +35,6 @@ what_you_see: |
     Mémoire physique totale:  16 384 Mo
     Mémoire physique disponible: 5 120 Mo
 
-# ---------------------------------------------------------------------------
-# Interprétation : que signifie ce que l'utilisateur voit
-# ---------------------------------------------------------------------------
 explanation: |
   systeminfo te donne l'identité complète de ton ordinateur.
   C'est la fiche d'identité technique que Windows maintient à jour.
@@ -61,40 +52,35 @@ explanation: |
   C'est la première information qu'un technicien IT te demandera
   quand tu appelleras le support.
 
-# ---------------------------------------------------------------------------
-# Situations concrètes où cette information aide l'utilisateur
-# ---------------------------------------------------------------------------
 real_world_use_cases:
-  - |
-    **On te demande des infos pour débloquer un ticket IT**
-    Au lieu de naviguer dans les menus, systeminfo te donne tout
-    en 3 secondes. Copie-colle la sortie, le support aura tout.
-  - |
-    **Une application refuse de s'installer**
-    systeminfo montre l'architecture (x64) et la version de Windows.
-    Si tu as 32-bit au lieu de 64-bit, l'installateur peut refuser.
-  - |
-    **Ton PC est lent et tu veux savoir si c'est la RAM**
-    "Available Physical Memory" te donne la RAM réellement disponible.
-    Si c'est en dessous de 500 Mo, le système commence à utiliser
-    le fichier d'échange (beaucoup plus lent).
-  - |
-    **Tu ne sais pas si ton ordinateur est dans un domaine d'entreprise**
-    "Domain" te le confirme. Si c'est "WORKGROUP", ton PC est autonome.
-    Si c'est "DOMAINESCHOOL", ton entreprise le gère à distance.
+  - text: |
+      **On te demande des infos pour débloquer un ticket IT**
+      Au lieu de naviguer dans les menus, systeminfo te donne tout
+      en 3 secondes. Copie-colle la sortie, le support aura tout.
+    example: "systeminfo /FO CSV"
+  - text: |
+      **Une application refuse de s'installer**
+      systeminfo montre l'architecture (x64) et la version de Windows.
+      Si tu as 32-bit au lieu de 64-bit, l'installateur peut refuser.
+    example: "systeminfo | findstr Type"
+  - text: |
+      **Ton PC est lent et tu veux savoir si c'est la RAM**
+      "Available Physical Memory" te donne la RAM réellement disponible.
+      Si c'est en dessous de 500 Mo, le système commence à utiliser
+      le fichier d'échange (beaucoup plus lent).
+    example: "systeminfo | findstr \"Mémoire\""
+  - text: |
+      **Tu ne sais pas si ton ordinateur est dans un domaine d'entreprise**
+      "Domain" te le confirme. Si c'est "WORKGROUP", ton PC est autonome.
+      Si c'est "DOMAINESCHOOL", ton entreprise le gère à distance.
+    example: "systeminfo | findstr \"Domain\""
 
-# ---------------------------------------------------------------------------
-# Pour aller plus loin : commandes et ressources supplémentaires
-# ---------------------------------------------------------------------------
 go_deeper:
   - "systeminfo /FO CSV — Sortie format CSV (utilisable dans Excel)"
   - "systeminfo /S PC-CHLOE-11 — Infos d'un ordinateur distant (si autorisé)"
   - "Get-ComputerInfo — Alternative PowerShell complète"
   - "Get-CimInstance Win32_OperatingSystem — Infos système détaillées"
 
-# ---------------------------------------------------------------------------
-# Commandes liées
-# ---------------------------------------------------------------------------
 related_commands:
   - "systeminfo /FO CSV"
   - "Get-ComputerInfo"

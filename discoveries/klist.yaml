@@ -10,15 +10,9 @@ category: "Authentification"
 level: 2
 platform: windows
 
-# ---------------------------------------------------------------------------
-# Commande à exécuter
-# ---------------------------------------------------------------------------
 command: "klist tickets"
 command_title: "Commande"
 
-# ---------------------------------------------------------------------------
-# Ce que l'utilisateur voit quand il exécute la commande
-# ---------------------------------------------------------------------------
 what_you_see: |
   Une liste de tickets Kerberos avec :
     - Type : le type de ticket (krbtgt, krbtgt/...)
@@ -30,12 +24,9 @@ what_you_see: |
   Exemple :
     TicketType  : krbtgt/DOMAINSCHOOL.LOCAL@DOMAINSCHOOL.LOCAL
     StartTime   : 20/07/2025 08:30:15
-    EndTime       : 20/07/2025 18:30:15
+    EndTime     : 20/07/2025 18:30:15
     RenewUntil  : 27/07/2025 08:30:15
 
-# ---------------------------------------------------------------------------
-# Interprétation : que signifie ce que l'utilisateur voit
-# ---------------------------------------------------------------------------
 explanation: |
   Chaque fois que tu te connectes à ton ordinateur ou que tu
   accèdes à une ressource réseau, Windows obtient un "ticket"
@@ -53,40 +44,35 @@ explanation: |
   Savoir que ces tickets existent et quand ils expirent explique
   beaucoup de problèmes d'accès "qui apparaissent sans raison".
 
-# ---------------------------------------------------------------------------
-# Situations concrètes où cette information aide l'utilisateur
-# ---------------------------------------------------------------------------
 real_world_use_cases:
-  - |
-    **L'accès à un partage réseau plante après le déjeuner**
-    Le ticket Kerberos a expiré (généralement 10 heures).
-    klist montre que le ticket est périmé. Se déconnecter/reconnecter
-    ou taper "net refresh" obtient un nouveau ticket.
-  - |
-    **Power BI Desktop ne se connecte pas à SharePoint**
-    Le ticket d'authentification est peut-être expiré ou corrompu.
-    klist permet de vérifier les tickets actifs et leurs dates.
-  - |
-    **L'accès SSO à un portail d'entreprise ne fonctionne plus**
-    Le ticket Kerberos pour ce service spécifique peut être absent.
-    klist /li 0x3e7 /q montre les tickets du contexte de session.
-  - |
-    **Le changement de mot de passe ne se répercute pas immédiatement**
-    Les anciens tickets Kerberos restent valides jusqu'à expiration.
-    klist permet de visualiser ce décalage.
+  - text: |
+      **L'accès à un partage réseau plante après le déjeuner**
+      Le ticket Kerberos a expiré (généralement 10 heures).
+      klist montre que le ticket est périmé. Se déconnecter/reconnecter
+      ou taper "net refresh" obtient un nouveau ticket.
+    example: "klist purge"
+  - text: |
+      **Power BI Desktop ne se connecte pas à SharePoint**
+      Le ticket d'authentification est peut-être expiré ou corrompu.
+      klist permet de vérifier les tickets actifs et leurs dates.
+    example: "klist /li 0x3e7 /q"
+  - text: |
+      **L'accès SSO à un portail d'entreprise ne fonctionne plus**
+      Le ticket Kerberos pour ce service spécifique peut être absent.
+      klist /li 0x3e7 /q montre les tickets du contexte de session.
+    example: "klist sessions"
+  - text: |
+      **Le changement de mot de passe ne se répercute pas immédiatement**
+      Les anciens tickets Kerberos restent valides jusqu'à expiration.
+      klist permet de visualiser ce décalage.
+    example: "klist purge"
 
-# ---------------------------------------------------------------------------
-# Pour aller plus loin : commandes et ressources supplémentaires
-# ---------------------------------------------------------------------------
 go_deeper:
   - "klist sessions — Voir toutes les sessions avec tickets actifs"
   - "klist tickets — Voir les tickets de la session actuelle"
   - "klist /li 0x3e7 /q — Voir les tickets du contexte de session courant"
   - "klist purge — Supprimer tous les tickets (force une nouvelle authentification)"
 
-# ---------------------------------------------------------------------------
-# Commandes liées
-# ---------------------------------------------------------------------------
 related_commands:
   - "klist sessions"
   - "klist purge"

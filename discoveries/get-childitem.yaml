@@ -5,20 +5,14 @@
 # Plateforme : Windows
 # =============================================================================
 
-title: "Get-ChildItem — Le explorateur que tu ne voyais pas"
+title: "Get-ChildItem — L'explorateur que tu ne voyais pas"
 category: "Fichiers & Registre"
 level: 1
 platform: windows
 
-# ---------------------------------------------------------------------------
-# Commande à exécuter
-# ---------------------------------------------------------------------------
 command: "Get-ChildItem C:\\Users"
 command_title: "Commande"
 
-# ---------------------------------------------------------------------------
-# Ce que l'utilisateur voit quand il exécute la commande
-# ---------------------------------------------------------------------------
 what_you_see: |
   Une liste de dossiers et fichiers avec :
     - Mode : -a--- (fichier), d---- (dossier)
@@ -34,13 +28,10 @@ what_you_see: |
   Avec le commutateur -Recurse, tu vois aussi tout le contenu
   des sous-dossiers.
 
-# ---------------------------------------------------------------------------
-# Interprétation : que signifie ce que l'utilisateur voit
-# ---------------------------------------------------------------------------
 explanation: |
   Derrière le double-clic sur le Bureau qui ouvre l'Explorateur de
   fichiers, il y a un moteur qui explore le système de fichiers.
-  Get-ChildItem, c'est ce moteur, mais sans le masquer.
+  Get-ChildItem, c'est ce moteur, mais sans le masque.
 
   Le système de fichiers Windows (NTFS) stocke chaque fichier avec
   des métadonnées invisibles : date de création, permissions,
@@ -51,39 +42,34 @@ explanation: |
   même les variables d'environnement. C'est un couteau suisse
   d'exploration qui utilise le même principe partout.
 
-# ---------------------------------------------------------------------------
-# Situations concrètes où cette information aide l'utilisateur
-# ---------------------------------------------------------------------------
 real_world_use_cases:
-  - |
-    **Un fichier n'apparaît pas dans l'Explorateur mais existe**
-    Get-ChildItem -Force affiche les fichiers cachés et système.
-    Parfois un fichier est marqué comme caché par une application.
-  - |
-    **Tu veux savoir qui a modifié un document en dernier**
-    Get-ChildItem montre les dates de modification.
-    Couplé avec Get-Acl, tu peux voir les permissions et l'auteur.
-  - |
-    **Ton disque C: est plein et tu ne trouves pas la cause**
-    Get-ChildItem C:\ -Recurse -Force (avec -ErrorAction SilentlyContinue)
-    te donne une vue complète. Tu peux ensuite trier par taille.
-  - |
-    **Get-ChildItem Registry:\ permet de voir les clés du Registre**
-    L'Explorateur ne montre que des valeurs simplifiées.
-    Get-ChildItem Registry:\HKCU\Software montre la structure réelle.
+  - text: |
+      **Un fichier n'apparaît pas dans l'Explorateur mais existe**
+      Get-ChildItem -Force affiche les fichiers cachés et système.
+      Parfois un fichier est marqué comme caché par une application.
+    example: "Get-ChildItem -Force"
+  - text: |
+      **Tu veux savoir qui a modifié un document en dernier**
+      Get-ChildItem montre les dates de modification.
+      Couplé avec Get-Acl, tu peux voir les permissions et l'auteur.
+    example: "Get-Acl"
+  - text: |
+      **Ton disque C: est plein et tu ne trouves pas la cause**
+      Get-ChildItem C:\ -Recurse -Force te donne une vue complète.
+      Tu peux ensuite trier par taille.
+    example: "Get-ChildItem C:\\ -Recurse | Sort-Object Length -Descending | Select -First 10"
+  - text: |
+      **Get-ChildItem Registry:\ permet de voir les clés du Registre**
+      L'Explorateur ne montre que des valeurs simplifiées.
+      Get-ChildItem Registry:\HKCU\Software montre la structure réelle.
+    example: "Get-ChildItem Registry:\\HKCU\\Software"
 
-# ---------------------------------------------------------------------------
-# Pour aller plus loin : commandes et ressources supplémentaires
-# ---------------------------------------------------------------------------
 go_deeper:
   - "Get-ChildItem C:\\Users -Recurse -Force — Tout voir, même les cachés"
   - "Get-ChildItem Registry:\\HKCU\\Software — Explorer le Registre"
   - "Get-ChildItem C:\\ -Recurse | Sort-Object Length -Descending | Select -First 10 — Les 10 plus gros fichiers"
   - "Get-ChildItem .\\ -Attributes !d — Liste uniquement les fichiers"
 
-# ---------------------------------------------------------------------------
-# Commandes liées
-# ---------------------------------------------------------------------------
 related_commands:
   - "Get-ChildItem -Recurse"
   - "Get-ChildItem -Force"
