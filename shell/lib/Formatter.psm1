@@ -92,7 +92,8 @@ function Format-DiscoveryOutput {
         [switch]$ShowRawOutput
     )
 
-    $frameWidth = 78
+    $consoleWidth = if ($host.UI.RawUI.WindowSize) { $host.UI.RawUI.WindowSize.Width } else { 120 }
+    $frameWidth = [Math]::Min(78, [Math]::Max(40, $consoleWidth - 4))
     $totalPages = 9
     $tl = "┌"
     $tr = "┐"
