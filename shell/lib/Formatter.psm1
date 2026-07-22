@@ -14,13 +14,28 @@ function Write-Frame {
 
     if ($Title) {
         Write-Host "┌$('-' * ($Width - 2))┐" -ForegroundColor DarkGray
-        if ($Title.Length -gt $Width - 4) {
-            Write-Host "│ $(($Title.Substring(0, $Width - 6)))..." -ForegroundColor $TitleColor
+        $titleWidth = Get-DisplayWidth $Title
+        if ($titleWidth -gt $Width - 4) {
+            $visibleWidth = $Width - 6
+            $prefix = ""
+            $remaining = $titleWidth
+            $result = ""
+            $enm = $Title.GetEnumerator()
+            while ($enm.MoveNext()) {
+                $cp = [int]$enm.Current
+                $charWidth = if ($cp -gt 0x1100 -and ($cp -le 0x115f -or $cp -eq 0x2329 -or $cp -eq 0x232a -or ($cp -ge 0x2e80 -and $cp -le 0xa4cf -and $cp -ne 0x309b -and $cp -ne 0x309c) -or ($cp -ge 0xac00 -and $cp -le 0xd7af) -or ($cp -ge 0xf900 -and $cp -le 0xfaff) -or ($cp -ge 0xfe10 -and $cp -le 0xfe19) -or ($cp -ge 0xfe30 -and $cp -le 0xfe6f) -or ($cp -ge 0xff00 -and $cp -le 0xff60) -or ($cp -ge 0xffe0 -and $cp -le 0xffe6) -or ($cp -ge 0x20000 -and $cp -le 0x2fffd) -or ($cp -ge 0x30000 -and $cp -le 0x3fffd))) { 2 } else { 1 }
+                if ($remaining - $charWidth -ge $visibleWidth) { $remaining -= $charWidth; continue }
+                if ($result.Length + 2 -ge $visibleWidth) { break }
+                $result += $enm.Current
+            }
+            Write-Host "│ $result..." -ForegroundColor $TitleColor
         } else {
-            Write-Host "│ $($Title.PadRight($Width - 4))│" -ForegroundColor $TitleColor
+            $padded = "│ $($Title.PadRight($Width - 4))│"
+            Write-Host $padded -ForegroundColor $TitleColor
         }
         if ($Subtitle) {
-            Write-Host "│ $($Subtitle.PadRight($Width - 4))│" -ForegroundColor DarkGray
+            $subPadded = "│ $($Subtitle.PadRight($Width - 4))│"
+            Write-Host $subPadded -ForegroundColor DarkGray
         }
         Write-Host "└$('-' * ($Width - 2))┘" -ForegroundColor DarkGray
         Write-Host ""
