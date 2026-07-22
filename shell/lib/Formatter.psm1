@@ -1,4 +1,4 @@
-# =============================================================================
+﻿# =============================================================================
 # Formatter.psm1
 # Rendu console du Markdown de CommandSchool
 # =============================================================================
@@ -67,7 +67,7 @@ function Show-ContinuePrompt {
 
     Write-Host ""
     if ($IsLastPage) {
-        Write-Host "  Appuyez sur Echap pour quitter, sur Enter pour le menu..." -ForegroundColor DarkCyan
+        Write-Host "  Appuyez sur Echap pour quitter." -ForegroundColor DarkCyan
     } else {
         Write-Host "  Appuyez sur Enter pour continuer..." -ForegroundColor DarkGray
     }
