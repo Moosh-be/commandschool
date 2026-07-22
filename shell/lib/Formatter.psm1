@@ -397,6 +397,43 @@ function Format-About {
 # Fonctions auxiliaires privées
 # =====================================================================
 
+function Get-DisplayWidth {
+    param([string]$String)
+    if ([string]::IsNullOrEmpty($String)) { return 0 }
+    $count = 0
+    $enm = $String.GetEnumerator()
+    while ($enm.MoveNext()) {
+        $cp = [int]$enm.Current
+        if ($cp -gt 0x1100 -and (
+            $cp -le 0x115f -or
+            $cp -eq 0x2329 -or $cp -eq 0x232a -or
+            ($cp -ge 0x2e80 -and $cp -le 0xa4cf -and $cp -ne 0x309b -and $cp -ne 0x309c) -or
+            ($cp -ge 0xac00 -and $cp -le 0xd7af) -or
+            ($cp -ge 0xf900 -and $cp -le 0xfaff) -or
+            ($cp -ge 0xfe10 -and $cp -le 0xfe19) -or
+            ($cp -ge 0xfe30 -and $cp -le 0xfe6f) -or
+            ($cp -ge 0xff00 -and $cp -le 0xff60) -or
+            ($cp -ge 0xffe0 -and $cp -le 0xffe6) -or
+            ($cp -ge 0x20000 -and $cp -le 0x2fffd) -or
+            ($cp -ge 0x30000 -and $cp -le 0x3fffd)
+        )) { $count += 2 }
+        else { $count += 1 }
+    }
+    return $count
+}
+
+function Get-Padding {
+    param(
+        [string]$Text,
+        [int]$TargetWidth,
+        [string]$BorderChar = "│"
+    )
+    $currentWidth = Get-DisplayWidth $Text
+    $needed = $TargetWidth - 2 - $currentWidth
+    if ($needed -lt 0) { $needed = 0 }
+    return "${BorderChar}$(' ' * $needed)"
+}
+
 function Write-MultiLineText {
     param(
         [string]$Text,
