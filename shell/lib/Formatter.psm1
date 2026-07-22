@@ -119,7 +119,7 @@ function Format-DiscoveryOutput {
 
     function New-TopBorder  { param($w); "$tl$('-' * ($w - 2))$tr" }
     function New-BottomBorder { param($w); "$bl$('-' * ($w - 2))$br" }
-    function New-HLine { param($w); Write-Host $vl -ForegroundColor DarkGray -NoNewline; Write-Host $('-' * ($w - 2)) -ForegroundColor DarkGray; }
+    function New-HLine { param($w); Write-Host $vl -ForegroundColor DarkGray -NoNewline; Write-Host $('-' * ($w - 2)) -ForegroundColor DarkGray -NoNewline; Write-Host $vl -ForegroundColor DarkGray; }
 
     # Page 0: En-tête
     $topBorder = New-TopBorder $frameWidth
