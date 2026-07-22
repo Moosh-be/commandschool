@@ -13,19 +13,19 @@ function Write-Frame {
     )
 
     if ($Title) {
-        Write-Host "+$('-' * ($Width - 2))+" -ForegroundColor DarkGray
+        Write-Host "┌$('-' * ($Width - 2))┐" -ForegroundColor DarkGray
         if ($Title.Length -gt $Width - 4) {
-            Write-Host "| $(($Title.Substring(0, $Width - 6)))..." -ForegroundColor $TitleColor
+            Write-Host "│ $(($Title.Substring(0, $Width - 6)))..." -ForegroundColor $TitleColor
         } else {
-            Write-Host "| $($Title.PadRight($Width - 4))|" -ForegroundColor $TitleColor
+            Write-Host "│ $($Title.PadRight($Width - 4))│" -ForegroundColor $TitleColor
         }
         if ($Subtitle) {
-            Write-Host "| $($Subtitle.PadRight($Width - 4))|" -ForegroundColor DarkGray
+            Write-Host "│ $($Subtitle.PadRight($Width - 4))│" -ForegroundColor DarkGray
         }
-        Write-Host "+$('-' * ($Width - 2))+" -ForegroundColor DarkGray
+        Write-Host "└$('-' * ($Width - 2))┘" -ForegroundColor DarkGray
         Write-Host ""
     } else {
-        Write-Host "| $Text" -ForegroundColor $TitleColor
+        Write-Host "│ $Text" -ForegroundColor $TitleColor
     }
 }
 
@@ -94,14 +94,24 @@ function Format-DiscoveryOutput {
 
     $frameWidth = 78
     $totalPages = 9
+    $tl = "┌"
+    $tr = "┐"
+    $bl = "└"
+    $br = "┘"
+    $hv = "─"
+    $vl = "│"
+
+    function New-TopBorder  { param($w); "$tl$('-' * ($w - 2))$tr" }
+    function New-BottomBorder { param($w); "$bl$('-' * ($w - 2))$br" }
+    function New-HLine { param($w); Write-Host $vl -ForegroundColor DarkGray -NoNewline; Write-Host $('-' * ($w - 2)) -ForegroundColor DarkGray; }
 
     # Page 0: En-tête
-    $topBorder = "+$('-' * ($frameWidth - 2))+".ToString()
-    $bottomBorder = "+$('-' * ($frameWidth - 2))+".ToString()
+    $topBorder = New-TopBorder $frameWidth
+    $bottomBorder = New-BottomBorder $frameWidth
     Show-PageContent 0 $totalPages $topBorder $bottomBorder
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
-    Write-Host "| $($('CommandSchool').PadRight($frameWidth - 4))|" -ForegroundColor DarkCyan
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+    New-HLine $frameWidth
+    Write-Host "│ $($('CommandSchool').PadRight($frameWidth - 4))│" -ForegroundColor DarkCyan
+    New-HLine $frameWidth
     Write-Host ""
     Write-Host "  $($Discovery.title)" -ForegroundColor Cyan
     Write-Host ""
@@ -114,12 +124,12 @@ function Format-DiscoveryOutput {
     Show-ContinuePrompt $false
 
     # Page 1: La commande
-    $topBorder = "+$('-' * ($frameWidth - 2))+".ToString()
-    $bottomBorder = "+$('-' * ($frameWidth - 2))+".ToString()
+    $topBorder = New-TopBorder $frameWidth
+    $bottomBorder = New-BottomBorder $frameWidth
     Show-PageContent 1 $totalPages $topBorder $bottomBorder
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
-    Write-Host "| $($('- Chapitre 1 :').PadLeft(20)) Commande............|" -ForegroundColor DarkGray
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+    New-HLine $frameWidth
+    Write-Host "│ $($('- Chapitre 1 :').PadLeft(20)) Commande............│" -ForegroundColor DarkGray
+    New-HLine $frameWidth
     Write-Host ""
     Write-Host "  $($Discovery.command)" -ForegroundColor Green
     Write-Host ""
@@ -128,12 +138,12 @@ function Format-DiscoveryOutput {
     Show-ContinuePrompt $false
 
     # Page 2: Ce que tu vois
-    $topBorder = "+$('-' * ($frameWidth - 2))+".ToString()
-    $bottomBorder = "+$('-' * ($frameWidth - 2))+".ToString()
+    $topBorder = New-TopBorder $frameWidth
+    $bottomBorder = New-BottomBorder $frameWidth
     Show-PageContent 2 $totalPages $topBorder $bottomBorder
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
-    Write-Host "| $($('- Chapitre 2 :').PadLeft(20)) Ce que tu vois...   |" -ForegroundColor DarkGray
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+    New-HLine $frameWidth
+    Write-Host "│ $($('- Chapitre 2 :').PadLeft(20)) Ce que tu vois...   │" -ForegroundColor DarkGray
+    New-HLine $frameWidth
     Write-Host ""
     if ($Discovery.what_you_see) {
         Write-MultiLineText $Discovery.what_you_see -ForegroundColor DarkYellow
@@ -144,12 +154,12 @@ function Format-DiscoveryOutput {
     Show-ContinuePrompt $false
 
     # Page 3: Ce que ton ordinateur dit
-    $topBorder = "+$('-' * ($frameWidth - 2))+".ToString()
-    $bottomBorder = "+$('-' * ($frameWidth - 2))+".ToString()
+    $topBorder = New-TopBorder $frameWidth
+    $bottomBorder = New-BottomBorder $frameWidth
     Show-PageContent 3 $totalPages $topBorder $bottomBorder
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
-    Write-Host "| $($('- Chapitre 3 :').PadLeft(20)) Commande sortie...  |" -ForegroundColor DarkGray
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+    New-HLine $frameWidth
+    Write-Host "│ $($('- Chapitre 3 :').PadLeft(20)) Commande sortie...  │" -ForegroundColor DarkGray
+    New-HLine $frameWidth
     Write-Host ""
 
     if ($CommandResult.Success) {
@@ -173,12 +183,12 @@ function Format-DiscoveryOutput {
     Show-ContinuePrompt $false
 
     # Page 4: Ce que cela signifie
-    $topBorder = "+$('-' * ($frameWidth - 2))+".ToString()
-    $bottomBorder = "+$('-' * ($frameWidth - 2))+".ToString()
+    $topBorder = New-TopBorder $frameWidth
+    $bottomBorder = New-BottomBorder $frameWidth
     Show-PageContent 4 $totalPages $topBorder $bottomBorder
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
-    Write-Host "| $($('- Chapitre 4 :').PadLeft(20)) Interprétation...   |" -ForegroundColor DarkGray
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+    New-HLine $frameWidth
+    Write-Host "│ $($('- Chapitre 4 :').PadLeft(20)) Interprétation...   │" -ForegroundColor DarkGray
+    New-HLine $frameWidth
     Write-Host ""
     if ($Discovery.explanation) {
         Write-MultiLineText $Discovery.explanation -ForegroundColor White
@@ -189,12 +199,12 @@ function Format-DiscoveryOutput {
     Show-ContinuePrompt $false
 
     # Page 5: Quand cela t'aide
-    $topBorder = "+$('-' * ($frameWidth - 2))+".ToString()
-    $bottomBorder = "+$('-' * ($frameWidth - 2))+".ToString()
+    $topBorder = New-TopBorder $frameWidth
+    $bottomBorder = New-BottomBorder $frameWidth
     Show-PageContent 5 $totalPages $topBorder $bottomBorder
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
-    Write-Host "| $($('- Chapitre 5 :').PadLeft(20)) Cas pratiques.......|" -ForegroundColor DarkGray
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+    New-HLine $frameWidth
+    Write-Host "│ $($('- Chapitre 5 :').PadLeft(20)) Cas pratiques.......│" -ForegroundColor DarkGray
+    New-HLine $frameWidth
     Write-Host ""
 
     if ($Discovery.real_world_use_cases -and $Discovery.real_world_use_cases.Count -gt 0) {
@@ -226,12 +236,12 @@ function Format-DiscoveryOutput {
     Show-ContinuePrompt $false
 
     # Page 6: Pour aller plus loin
-    $topBorder = "+$('-' * ($frameWidth - 2))+".ToString()
-    $bottomBorder = "+$('-' * ($frameWidth - 2))+".ToString()
+    $topBorder = New-TopBorder $frameWidth
+    $bottomBorder = New-BottomBorder $frameWidth
     Show-PageContent 6 $totalPages $topBorder $bottomBorder
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
-    Write-Host "| $($('- Chapitre 6 :').PadLeft(20)) Aller plus loin.....|" -ForegroundColor DarkGray
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+    New-HLine $frameWidth
+    Write-Host "│ $($('- Chapitre 6 :').PadLeft(20)) Aller plus loin.....│" -ForegroundColor DarkGray
+    New-HLine $frameWidth
     Write-Host ""
 
     if ($Discovery.go_deeper -and $Discovery.go_deeper.Count -gt 0) {
@@ -249,12 +259,12 @@ function Format-DiscoveryOutput {
     Show-ContinuePrompt $false
 
     # Page 7: Commandes liées
-    $topBorder = "+$('-' * ($frameWidth - 2))+".ToString()
-    $bottomBorder = "+$('-' * ($frameWidth - 2))+".ToString()
+    $topBorder = New-TopBorder $frameWidth
+    $bottomBorder = New-BottomBorder $frameWidth
     Show-PageContent 7 $totalPages $topBorder $bottomBorder
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
-    Write-Host "| $($('- Chapitre 7 :').PadLeft(20)) Commandes liées.....|" -ForegroundColor DarkGray
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+    New-HLine $frameWidth
+    Write-Host "│ $($('- Chapitre 7 :').PadLeft(20)) Commandes liées.....│" -ForegroundColor DarkGray
+    New-HLine $frameWidth
     Write-Host ""
 
     if ($Discovery.related_commands -and $Discovery.related_commands.Count -gt 0) {
@@ -271,12 +281,12 @@ function Format-DiscoveryOutput {
     Show-ContinuePrompt $false
 
     # Page 8: Pied de page
-    $topBorder = "+$('-' * ($frameWidth - 2))+".ToString()
-    $bottomBorder = "+$('-' * ($frameWidth - 2))+".ToString()
+    $topBorder = New-TopBorder $frameWidth
+    $bottomBorder = New-BottomBorder $frameWidth
     Show-PageContent 8 $totalPages $topBorder $bottomBorder
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
-    Write-Host "| $($('- Fin de la découverte.').PadRight($frameWidth - 4))|" -ForegroundColor DarkCyan
-    Write-Host "+$('-' * ($frameWidth - 2))+" -ForegroundColor DarkGray
+    New-HLine $frameWidth
+    Write-Host "│ $($('- Fin de la découverte.').PadRight($frameWidth - 4))│" -ForegroundColor DarkCyan
+    New-HLine $frameWidth
     Write-Host ""
     Write-Host "  Pour continuer :" -ForegroundColor DarkCyan
     Write-Host "    .\cmdschool.ps1 random        --> Découverte aléatoire" -ForegroundColor DarkGray
