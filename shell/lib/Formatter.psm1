@@ -52,9 +52,9 @@ function Show-ContinuePrompt {
 
     Write-Host ""
     if ($IsLastPage) {
-        Write-Host "  Appuyez sur Echap pour quitter, sur Enter pour retourner au menu..." -ForegroundColor DarkCyan
+        Write-Host "  Appuyez sur Echap pour quitter, sur Enter pour le menu..." -ForegroundColor DarkCyan
     } else {
-        Write-Host "  Appuyez sur une touche pour continuer..." -ForegroundColor DarkGray
+        Write-Host "  Appuyez sur Enter pour continuer..." -ForegroundColor DarkGray
     }
 
     $key = $null
